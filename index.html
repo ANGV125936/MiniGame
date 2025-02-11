@@ -11,33 +11,39 @@
     <div class="container"> <!-- Contenedor principal -->
         <h1>Menú de Mini Juegos</h1> <!-- Título de la página -->
         <div class="menu"> <!-- Menú de botones -->
-            <!-- Botones que redirigen a diferentes juegos -->
-            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='ppt/ppt.html'">Piedra, Papel y Tijera</button>
-            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='hangman/hangman.html'">Ahorcado</button>
-            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='escaleras-y-serpientes/escaleras-y-serpientes.html'">Escaleras y Serpientes</button>
-            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='quien-quiere-ser-millonario/quien-quiere-ser-millonario.html'">Quién Quiere Ser Millonario</button>
-            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='juego-cinco/juego-cinco.html'">Juego Cinco</button>
+            <button onclick="playSound(); location.href='ppt/ppt.html'">Piedra, Papel y Tijera</button>
+            <button onclick="playSound(); location.href='hangman/hangman.html'">Ahorcado</button>
+            <button onclick="playSound(); location.href='escaleras-y-serpientes/escaleras-y-serpientes.html'">Escaleras y Serpientes</button>
+            <button onclick="playSound(); location.href='quien-quiere-ser-millonario/quien-quiere-ser-millonario.html'">Quién Quiere Ser Millonario</button>
+            <button onclick="playSound(); location.href='juego-cinco/juego-cinco.html'">Juego Cinco</button>
         </div>
 
         <!-- Control de volumen y reproducción de música -->
         <div class="music-controls">
             <label for="volumeSlider" style="color: white;">🎵 Volumen de Música:</label>
             <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.10">
-            <button id="playMusic">▶ Reproducir Música</button>
+            <button id="playPauseMusic">▶ Reproducir Música</button>
         </div>
     </div>
 
     <!-- Audio de botones y música de fondo -->
-    <audio id="buttonSound"></audio>
+    <audio id="buttonSound" src="music/button_pressed.mp3"></audio>
     <audio id="backgroundMusic" src="music/game_music.mp3" loop></audio>
 
     <script>
-        // Función que reproduce el sonido cuando se posiciona el mouse sobre un botón
-        function playSound(src) {
+        // Función para reproducir el sonido de los botones
+        function playSound() {
             const sound = document.getElementById('buttonSound');
-            sound.src = src;
+            sound.currentTime = 0; // Reinicia el sonido
             sound.play();
         }
+
+        // Agregar eventos a los botones para activar el sonido en PC y móviles
+        const buttons = document.querySelectorAll('.menu button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseover', playSound);  // PC: Al pasar el cursor
+            button.addEventListener('touchstart', playSound); // Móvil: Al tocar el botón
+        });
 
         // Función que selecciona un fondo aleatorio
         function setRandomBackground() {
@@ -64,6 +70,7 @@
         // Control del volumen del audio
         const volumeSlider = document.getElementById('volumeSlider');
         const backgroundMusic = document.getElementById('backgroundMusic');
+        const playPauseButton = document.getElementById("playPauseMusic");
 
         // Establecer el volumen inicial
         backgroundMusic.volume = volumeSlider.value;
@@ -73,12 +80,18 @@
             backgroundMusic.volume = volumeSlider.value;
         });
 
-        // Botón para iniciar la música después de la interacción del usuario
-        document.getElementById("playMusic").addEventListener("click", function() {
-            backgroundMusic.play().catch(error => console.log("Error al reproducir:", error));
+        // Función para reproducir o pausar la música
+        playPauseButton.addEventListener("click", function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playPauseButton.textContent = "⏸ Pausar Música"; // Cambia el texto del botón
+            } else {
+                backgroundMusic.pause();
+                playPauseButton.textContent = "▶ Reproducir Música"; // Cambia el texto del botón
+            }
         });
 
-        // Llamar a las funciones para establecer el fondo al cargar la página y cambiarlo cada 5 segundos
+        // Llamar a las funciones para establecer el fondo al cargar la página y cambiarlo cada 12 segundos
         window.onload = function() {
             setRandomBackground();
             changeBackground();
