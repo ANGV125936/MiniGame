@@ -9,13 +9,13 @@
 <body>
     <img src="ppt/assets/incca.png" alt="INCCA" class="logo"> <!-- Logotipo de la página -->
     <div class="container"> <!-- Contenedor principal -->
-        <h1>Menú de Mini </h1> <!-- Título de la página -->
+        <h1>Menú de Mini Juegos</h1> <!-- Título de la página -->
         <div class="menu"> <!-- Menú de botones -->
-            <button onclick="playSound(); location.href='ppt/ppt.html'">Piedra, Papel y Tijera</button>
-            <button onclick="playSound(); location.href='hangman/hangman.html'">Ahorcado</button>
-            <button onclick="playSound(); location.href='escaleras-y-serpientes/escaleras-y-serpientes.html'">Escaleras y Serpientes</button>
-            <button onclick="playSound(); location.href='quien-quiere-ser-millonario/quien-quiere-ser-millonario.html'">Quién Quiere Ser Millonario</button>
-            <button onclick="playSound(); location.href='juego-cinco/juego-cinco.html'">Juego Cinco</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="delayedNavigation(this, 'ppt/ppt.html')">Piedra, Papel y Tijera</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="delayedNavigation(this, 'hangman/hangman.html')">Ahorcado</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="delayedNavigation(this, 'escaleras-y-serpientes/escaleras-y-serpientes.html')">Escaleras y Serpientes</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="delayedNavigation(this, 'quien-quiere-ser-millonario/quien-quiere-ser-millonario.html')">Quién Quiere Ser Millonario</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="delayedNavigation(this, 'juego-cinco/juego-cinco.html')">Juego Cinco</button>
         </div>
 
         <!-- Control de volumen y reproducción de música -->
@@ -27,25 +27,32 @@
     </div>
 
     <!-- Audio de botones y música de fondo -->
-    <audio id="buttonSound" src="music/button_pressed.mp3"></audio>
+    <audio id="buttonSound"></audio>
     <audio id="backgroundMusic" src="music/game_music.mp3" loop></audio>
 
     <script>
-        // Función para reproducir el sonido de los botones
-        function playSound() {
+        // Variable para controlar el tiempo entre clics en los botones
+        let buttonCooldown = false;
+
+        // Función para reproducir el sonido cuando el cursor pasa sobre un botón
+        function playSound(src) {
             const sound = document.getElementById('buttonSound');
-            sound.currentTime = 0; // Reinicia el sonido
+            sound.src = src;
             sound.play();
         }
 
-        // Agregar eventos a los botones para activar el sonido en PC y móviles
-        const buttons = document.querySelectorAll('.menu button');
-        buttons.forEach(button => {
-            button.addEventListener('mouseover', playSound);  // PC: Al pasar el cursor
-            button.addEventListener('touchstart', playSound); // Móvil: Al tocar el botón
-        });
+        // Función para cambiar de juego con retraso de 1.2 segundos y evitar múltiples clics rápidos
+        function delayedNavigation(button, url) {
+            if (buttonCooldown) return; // Evita múltiples clics
+            buttonCooldown = true; // Bloquea los clics por 1.2 segundos
+            
+            setTimeout(() => {
+                window.location.href = url; // Redirige después del tiempo
+                buttonCooldown = false; // Vuelve a permitir clics
+            }, 1200);
+        }
 
-        // Función que selecciona un fondo aleatorio
+        // Función para seleccionar un fondo aleatorio
         function setRandomBackground() {
             const backgrounds = [
                 'url(\'../image/background1.gif\')', 'url(\'../image/background2.gif\')',
