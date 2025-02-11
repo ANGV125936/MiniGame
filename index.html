@@ -19,14 +19,17 @@
             <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='juego-cinco/juego-cinco.html'">Juego Cinco</button>
         </div>
 
-        <!-- Control de volumen -->
-        <label for="volumeSlider" style="color: white;">🎵 Volumen de Música:</label>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.10"> <!-- Control deslizante -->
+        <!-- Control de volumen y reproducción de música -->
+        <div class="music-controls">
+            <label for="volumeSlider" style="color: white;">🎵 Volumen de Música:</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.10">
+            <button id="playMusic">▶ Reproducir Música</button>
+        </div>
     </div>
 
     <!-- Audio de botones y música de fondo -->
     <audio id="buttonSound"></audio>
-    <audio id="backgroundMusic" src="music/game_music.mp3" autoplay loop></audio>
+    <audio id="backgroundMusic" src="music/game_music.mp3" loop></audio>
 
     <script>
         // Función que reproduce el sonido cuando se posiciona el mouse sobre un botón
@@ -68,6 +71,11 @@
         // Cambiar el volumen según el control deslizante
         volumeSlider.addEventListener('input', function () {
             backgroundMusic.volume = volumeSlider.value;
+        });
+
+        // Botón para iniciar la música después de la interacción del usuario
+        document.getElementById("playMusic").addEventListener("click", function() {
+            backgroundMusic.play().catch(error => console.log("Error al reproducir:", error));
         });
 
         // Llamar a las funciones para establecer el fondo al cargar la página y cambiarlo cada 5 segundos
