@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Ahorcado</title>
+    <link rel="stylesheet" href="hangman_base.css">
+    <link rel="stylesheet" href="hangman_elements.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Juego de Ahorcado O </h1>
+        <input type="text" id="playerName" placeholder="Ingresa tu nombre" class="name-input">
+        <button class="start-button" id="startButton">Iniciar Juego</button>
+        <div id="gameContainer" class="hidden">
+            <h2 id="playerDisplayName"></h2>
+            <div id="hint" class="hint"></div>
+            <div id="wordContainer" class="word-container"></div>
+            <div id="lettersContainer" class="letters-container">
+                <div class="letters-row" id="row1"></div>
+                <div class="letters-row" id="row2"></div>
+                <div class="letters-row" id="row3"></div>
+            </div>
+            <div id="result" class="result"></div>
+            <div id="score" class="score"></div>
+            <div class="buttons-container">
+                <button class="action-button" aria-label="Ver historia del juego">Historia</button>
+                <button class="action-button" aria-label="Volver al índice">Volver al índice</button>
+            </div>
+        </div>
+        <div id="roundMessage" class="round-container">
+            <div class="round"></div>
+        </div>
+    </div>
+    <script type="module">
+        import { startGame } from './player_interaction.js';
+        window.startGame = startGame; // Hacer la función disponible globalmente
+    </script>
+</body>
+</html>

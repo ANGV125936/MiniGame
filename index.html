@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Juegos</title>
+    <link rel="stylesheet" href="css/styles.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+    <img src="ppt/assets/incca.png" alt="INCCA" class="logo"> <!-- Logotipo de la página -->
+    <div class="container"> <!-- Contenedor principal -->
+        <h1>Menú de Mini Juegos</h1> <!-- Título de la página -->
+        <div class="menu"> <!-- Menú de botones -->
+            <!-- Botones que redirigen a diferentes juegos -->
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='ppt/ppt.html'">Piedra, Papel y Tijera</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='hangman/hangman.html'">Ahorcado</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='escaleras-y-serpientes/escaleras-y-serpientes.html'">Escaleras y Serpientes</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='quien-quiere-ser-millonario/quien-quiere-ser-millonario.html'">Quién Quiere Ser Millonario</button>
+            <button onmouseover="playSound('music/button_pressed.mp3')" onclick="location.href='juego-cinco/juego-cinco.html'">Juego Cinco</button>
+        </div>
+
+        <!-- Control de volumen -->
+        <label for="volumeSlider" style="color: white;">🎵 Volumen de Música:</label>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.10"> <!-- Control deslizante -->
+    </div>
+
+    <!-- Audio de botones y música de fondo -->
+    <audio id="buttonSound"></audio>
+    <audio id="backgroundMusic" src="music/game_music.mp3" autoplay loop></audio>
+
+    <script>
+        // Función que reproduce el sonido cuando se posiciona el mouse sobre un botón
+        function playSound(src) {
+            const sound = document.getElementById('buttonSound');
+            sound.src = src;
+            sound.play();
+        }
+
+        // Función que selecciona un fondo aleatorio
+        function setRandomBackground() {
+            const backgrounds = [
+                'url(\'../image/background1.gif\')', 'url(\'../image/background2.gif\')',
+                'url(\'../image/background3.gif\')', 'url(\'../image/background4.gif\')',
+                'url(\'../image/background5.gif\')', 'url(\'../image/background6.gif\')',
+                'url(\'../image/background7.gif\')', 'url(\'../image/background8.gif\')',
+                'url(\'../image/background9.gif\')', 'url(\'../image/background10.gif\')',
+                'url(\'../image/background11.gif\')', 'url(\'../image/background12.gif\')',
+                'url(\'../image/background13.gif\')', 'url(\'../image/background14.gif\')',
+                'url(\'../image/background15.gif\')', 'url(\'../image/background16.gif\')'
+            ];
+            const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            document.body.style.backgroundImage = randomBackground;
+        }
+
+        // Función para cambiar el fondo cada 12 segundos
+        function changeBackground() {
+            setRandomBackground();
+            setTimeout(changeBackground, 12000);
+        }
+
+        // Control del volumen del audio
+        const volumeSlider = document.getElementById('volumeSlider');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
+        // Establecer el volumen inicial
+        backgroundMusic.volume = volumeSlider.value;
+
+        // Cambiar el volumen según el control deslizante
+        volumeSlider.addEventListener('input', function () {
+            backgroundMusic.volume = volumeSlider.value;
+        });
+
+        // Llamar a las funciones para establecer el fondo al cargar la página y cambiarlo cada 5 segundos
+        window.onload = function() {
+            setRandomBackground();
+            changeBackground();
+        };
+    </script>
+</body>
+</html>
