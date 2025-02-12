@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piedra, Papel y Tijera</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Enlaza tu archivo CSS -->
     <style>
-        /* Estilos para que la imagen ocupe toda la pantalla */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
         }
 
         .background-image {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -24,6 +23,7 @@
             background-size: cover;
             background-position: center;
             z-index: -1;
+            transition: background-image 0.5s ease-in-out;
         }
 
         .container {
@@ -36,35 +36,72 @@
             height: 100%;
             color: white;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .player-names {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .player-names input {
             padding: 10px;
-            margin: 10px;
             font-size: 16px;
             border-radius: 5px;
             border: none;
             width: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: background-color 0.3s;
+        }
+
+        .player-names input:focus {
+            background-color: white;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
         .buttons button {
-            padding: 10px 20px;
-            margin: 10px;
+            padding: 12px 24px;
             font-size: 16px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
             background-color: #007BFF;
             color: white;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
         .buttons button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* Estilos para el modal */
+        .buttons button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -81,16 +118,10 @@
             margin: 10% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 50%;
+            width: 90%;
             max-width: 600px;
             color: black;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-            font-size: 24px;
-            color: #007BFF;
         }
 
         .close {
@@ -98,178 +129,106 @@
             cursor: pointer;
             font-size: 24px;
             color: #888;
+            transition: color 0.3s;
         }
 
         .close:hover {
             color: #000;
         }
 
-        #recordsContent {
-            white-space: pre-wrap;
-            font-family: monospace;
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            max-height: 400px;
-            overflow-y: auto;
-        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
 
-        /* Estilos para los registros */
-        .record-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-        }
+            .player-names input {
+                width: 100%;
+            }
 
-        .record-item strong {
-            color: #007BFF;
+            .buttons button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Fondo con imagen aleatoria -->
-    <div class="background-image" id="backgroundImage"></div>
+    <div class="background-image" id="backgroundImage" aria-hidden="true"></div>
 
-    <!-- Contenedor principal -->
     <div class="container">
-        <!-- Título del juego -->
         <h1>Piedra, Papel y Tijera</h1>
 
-        <!-- Ingresar nombres de jugadores -->
         <div class="player-names">
             <input type="text" id="player1Name" placeholder="Nombre Jugador 1" required>
             <input type="text" id="player2Name" placeholder="Nombre Jugador 2" required>
         </div>
 
-        <!-- Botones de acción -->
         <div class="buttons">
-            <button onclick="startGame()">Iniciar Juego</button>
+            <button onclick="prepareGame()">🥊 ¡Que suene la campana!</button>
             <button onclick="goToMainMenu()">Volver al Menú Principal</button>
             <button onclick="showRecords()">Consultar Registros</button>
+            <button onclick="goToAbout()">Acerca del Juego</button>
         </div>
     </div>
 
-    <!-- Modal para consultar registros -->
-    <div class="modal" id="recordsModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Registros de Jugadores</h2>
-            <pre id="recordsContent"></pre>
-        </div>
-    </div>
-
-    <!-- Scripts -->
     <script>
-        // Array de imágenes de fondo
         const teamImages = [
             'assets/team1.jpg',
             'assets/team2.jpg',
             'assets/team3.jpg'
         ];
 
-        // Seleccionar una imagen aleatoria al cargar la página
         function setRandomBackground() {
             const randomIndex = Math.floor(Math.random() * teamImages.length);
             const randomImage = teamImages[randomIndex];
             document.getElementById('backgroundImage').style.backgroundImage = `url('${randomImage}')`;
         }
 
-        // Llamar a la función al cargar la página
         window.onload = setRandomBackground;
 
-        // Función para iniciar el juego
-        function startGame() {
-            const player1 = document.getElementById('player1Name').value;
-            const player2 = document.getElementById('player2Name').value;
+        function prepareGame() {
+            const player1 = document.getElementById('player1Name').value.trim();
+            const player2 = document.getElementById('player2Name').value.trim();
 
-            if (player1 && player2) {
-                alert(`¡El juego comienza! Jugadores: ${player1} vs ${player2}`);
-                saveGameHistory(player1, player2); // Guardar registro del juego
-            } else {
+            if (!player1 || !player2) {
                 alert("Por favor, ingresa los nombres de ambos jugadores.");
+                return;
             }
+
+            saveGameHistory(player1, player2);
         }
 
-        // Función para guardar el historial del juego
         function saveGameHistory(player1, player2) {
-            const gameHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
-            const currentDate = new Date().toLocaleString();
+            const currentDate = new Date().toISOString();
 
-            // Buscar si los jugadores ya tienen registros
-            let player1Record = gameHistory.find(record => record.name === player1);
-            let player2Record = gameHistory.find(record => record.name === player2);
-
-            // Si no existen, crear nuevos registros
-            if (!player1Record) {
-                player1Record = {
-                    name: player1,
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    gamesLost: 0,
-                    lastPlayed: currentDate
-                };
-                gameHistory.push(player1Record);
-            }
-
-            if (!player2Record) {
-                player2Record = {
-                    name: player2,
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    gamesLost: 0,
-                    lastPlayed: currentDate
-                };
-                gameHistory.push(player2Record);
-            }
-
-            // Actualizar estadísticas
-            player1Record.gamesPlayed++;
-            player2Record.gamesPlayed++;
-            player1Record.lastPlayed = currentDate;
-            player2Record.lastPlayed = currentDate;
-
-            // Guardar en LocalStorage
-            localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
+            fetch("http://127.0.0.1:5000/guardar_partida", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    player1: player1,
+                    player2: player2,
+                    winner: "Pendiente",
+                    date: currentDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ Partida guardada:", data);
+                window.location.href = 'game.html';  
+            })
+            .catch(error => {
+                console.error("❌ Error al guardar la partida:", error);
+                alert("Error al conectar con la base de datos.");
+            });
         }
 
-        // Función para mostrar registros
-        function showRecords() {
-            const modal = document.getElementById('recordsModal');
-            const recordsContent = document.getElementById('recordsContent');
-            const gameHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
-
-            if (gameHistory.length === 0) {
-                recordsContent.innerHTML = "<p>No hay registros disponibles.</p>";
-            } else {
-                let recordsHTML = "";
-                gameHistory.forEach(record => {
-                    recordsHTML += `
-                        <div class="record-item">
-                            <strong>Nombre:</strong> ${record.name}<br>
-                            <strong>Partidas jugadas:</strong> ${record.gamesPlayed}<br>
-                            <strong>Partidas ganadas:</strong> ${record.gamesWon}<br>
-                            <strong>Partidas perdidas:</strong> ${record.gamesLost}<br>
-                            <strong>Última partida:</strong> ${record.lastPlayed}
-                        </div>
-                    `;
-                });
-                recordsContent.innerHTML = recordsHTML;
-            }
-
-            modal.style.display = 'block';
-        }
-
-        // Función para cerrar el modal
-        function closeModal() {
-            const modal = document.getElementById('recordsModal');
-            modal.style.display = 'none';
-        }
-
-        // Función para volver al menú principal
         function goToMainMenu() {
-            window.location.href = '../index.html'; // Redirigir al menú principal
+            window.location.href = '../index.html';
+        }
+
+        function goToAbout() {
+            window.location.href = 'about.html';
         }
     </script>
 </body>

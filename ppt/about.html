@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijera: ¡El Combate Definitivo!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #D4AF37;  /* Dorado */
+            --secondary-color: #C41E3A;  /* Rojo */
+            --text-color: #FFFFFF;  /* Blanco */
+            --background-color: #1A1A1A;  /* Negro */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 var(--secondary-color), 
+                         6px 6px 0 #000000;
+            animation: titlePunch 0.5s ease-in-out;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h2::after {
+            content: '🥊';
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+            font-size: 0.8em;
+        }
+
+        p, ul, ol {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        ul, ol {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            animation: punch 0.3s ease-in-out infinite alternate;
+        }
+
+        .emoji {
+            font-size: 1.4em;
+            margin-right: 10px;
+            display: inline-block;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .emoji:hover {
+            transform: scale(1.5) rotate(15deg);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vw;
+            border: 20px solid rgba(212, 175, 55, 0.1);  /* Dorado transparente */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .boxing-glove {
+            position: fixed;
+            font-size: 5em;
+            animation: float 3s ease-in-out infinite;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .boxing-glove:nth-child(1) {
+            top: 10%;
+            left: 10%;
+        }
+
+        .boxing-glove:nth-child(2) {
+            top: 70%;
+            right: 10%;
+        }
+
+        @keyframes titlePunch {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes punch {
+            to { transform: rotate(15deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .timeline-item::after {
+            content: '🥊';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: var(--background-color);
+            border: 4px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .right::after {
+            left: -16px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: var(--secondary-color);
+            position: relative;
+            border-radius: 6px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item::after {
+                left: 15px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ring"></div>
+<a href="ppt.html" class="back-button">Volver al Ring</a>
+<a href="ppt.html" class="back-button">Volver al Ring</a>
+
+    <div class="container">
+        <h1>🥊 Piedra, Papel o Tijera: ¡El Combate Definitivo!</h1>
+
+        <section>
+            <h2>Historia del Gran Combate</h2>
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>206 a.C. - 220 d.C.</h3>
+                        <p>🇨🇳 China: El primer round conocido como "Shoushiling" (手势令) en la dinastía Han.</p>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Siglo XVII</h3>
+                        <p>🇯🇵 Japón: Evolución a "Jan-Ken" (じゃんけん), con los movimientos que conocemos hoy.</p>
+                    </div>
+                </div>
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Siglo XIX</h3>
+                        <p>🌍 El combate se extiende a Europa y el resto del mundo.</p>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Siglo XX y XXI</h3>
+                        <p>🏆 Se convierte en un fenómeno global con torneos y variantes de peso pesado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Reglas del Ring</h2>
+            <h3>Movimientos Básicos</h3>
+            <ul>
+                <li><span class="emoji">🪨</span> Piedra - El golpe contundente</li>
+                <li><span class="emoji">📄</span> Papel - La defensa impenetrable</li>
+                <li><span class="emoji">✂️</span> Tijera - El corte preciso</li>
+            </ul>
+            <h3>Combate</h3>
+            <ol>
+                <li>Dos luchadores se enfrentan en cada round.</li>
+                <li>Ambos eligen simultáneamente uno de los tres movimientos legendarios.</li>
+                <li>Se determina el ganador:
+                    <ul>
+                        <li><span class="emoji">🪨</span> Piedra noquea a <span class="emoji">✂️</span> Tijera</li>
+                        <li><span class="emoji">✂️</span> Tijera corta a <span class="emoji">📄</span> Papel</li>
+                        <li><span class="emoji">📄</span> Papel envuelve a <span class="emoji">🪨</span> Piedra</li>
+                    </ul>
+                </li>
+                <li>En caso de empate, ¡se va a la revancha!</li>
+                <li>La victoria se decide en un solo round o al mejor de 3, 5 o más.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Curiosidades del Campeonato</h2>
+            <ul>
+                <li><span class="emoji">🐒</span> Incluso los chimpancés han entrado al ring en experimentos científicos.</li>
+                <li><span class="emoji">💰</span> En 2006, un empresario japonés decidió una compra millonaria con un épico combate de Piedra, Papel o Tijera.</li>
+                <li><span class="emoji">📊</span> El Guinness reconoce el torneo más grande con más de 10.000 competidores.</li>
+                <li><span class="emoji">🧠</span> Algunos creen que tu movimiento favorito revela tu estrategia de vida.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
